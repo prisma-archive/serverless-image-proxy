@@ -1,0 +1,17 @@
+{
+  "scripts": {
+    "test": "tsc && ava",
+    "prepare": "docker-compose run --rm serverless npm rebuild",
+    "build": "rm -rf dist && tsc",
+    "deploy": "npm run build && serverless deploy -v"
+***REMOVED***,
+  "devDependencies": {
+    "@types/node": "^7.0.0",
+    "ava": "^0.17.0",
+    "typescript": "^2.1.5"
+***REMOVED***,
+  "dependencies": {
+    "aws-sdk": "^2.7.27",
+    "sharp": "^0.17.1"
+***REMOVED***
+}

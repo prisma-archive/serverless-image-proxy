@@ -1,0 +1,7 @@
+*.zip
+node_modules
+.serverless
+.idea
+.webpack
+.envrc
+dist

@@ -1,0 +1,30 @@
+service: ${env:STACK}
+
+plugins:
+#  - serverless-webpack
+
+provider:
+  name: aws
+  runtime: nodejs4.3
+  memorySize: 1536
+  stage: ${env:STAGE}
+  region: ${env:AWS_REGION}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:GetObject
+      Resource: "arn:aws:s3:::${env:S3_BUCKET}/*"
+
+package:
+  exclude:
+    - node_modules/**
+  include:
+    - node_modules/sharp/**
+
+functions:
+  resize:
+    handler: dist/handler.resize
+    events:
+      - http:
+          path: '{proxy+}'
+          method: get
