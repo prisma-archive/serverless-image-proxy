@@ -29,7 +29,7 @@ export async function resize(event, context, callback) {
       return
 ***REMOVED***
 
-    if (!ContentType.includes("image")) {
+    if (!ContentType.includes('image')) {
       callback(null, {
   ***REMOVED***
   ***REMOVED***
@@ -37,36 +37,37 @@ export async function resize(event, context, callback) {
 ***REMOVED***
 
     const body = await (async() => {
-      if (params.length > 0) {
-        const thumborConfig = parseConfig(params)
-
-    ***REMOVED***
-    ***REMOVED***
-
-    ***REMOVED***
-    ***REMOVED***
-    ***REMOVED***
-    ***REMOVED***
-    ***REMOVED***
-    ***REMOVED***
-  ***REMOVED***)
-***REMOVED***
-
-    ***REMOVED***
-
-    ***REMOVED***
-    ***REMOVED***
-***REMOVED*** else {
-    ***REMOVED***
-***REMOVED***
-
-    ***REMOVED***
-
-    ***REMOVED***
-***REMOVED*** else {
+      // return original for gifs or no params
+      if (ContentType === 'image/gif' || params.length === 0) {
   ***REMOVED***
   ***REMOVED***
 ***REMOVED***
+
+      const thumborConfig = parseConfig(params)
+
+  ***REMOVED***
+  ***REMOVED***
+
+  ***REMOVED***
+  ***REMOVED***
+  ***REMOVED***
+  ***REMOVED***
+  ***REMOVED***
+  ***REMOVED***
+***REMOVED***)
+***REMOVED***
+
+  ***REMOVED***
+
+  ***REMOVED***
+  ***REMOVED***
+***REMOVED*** else {
+  ***REMOVED***
+***REMOVED***
+
+  ***REMOVED***
+
+  ***REMOVED***
 ***REMOVED***)()
 
     callback(null, {
