@@ -37,8 +37,8 @@ export async function resize(event, context, callback) {
 ***REMOVED***
 
     const body = await (async() => {
-      // return original for gifs or no params
-      if (ContentType === 'image/gif' || params.length === 0) {
+  ***REMOVED***
+      if (ContentType === 'image/gif' || ContentType === 'image/svg+xml' || params.length === 0) {
   ***REMOVED***
   ***REMOVED***
 ***REMOVED***
