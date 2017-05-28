@@ -17,20 +17,21 @@ interface ThumborConfig {
 }
 
 export function parseConfig(parts: string[]): ThumborConfig {
-  let [cropStr, resizeStr] = parts
-  if (!resizeStr) {
-    resizeStr = cropStr
-    cropStr = undefined
+  if (parts.length === 1) {
 ***REMOVED***
-
+      resize: extractResize(parts[0]),
+      crop: null,
 ***REMOVED***
-    resize: extractResize(resizeStr),
-    crop: cropStr ? extractCrop(cropStr) : null,
+***REMOVED*** else {
+***REMOVED***
+      resize: extractResize(parts[1]),
+      crop: extractCrop(parts[0]),
+***REMOVED***
 ***REMOVED***
 }
 
 function extractResize(str: string): Resize {
-  const [, widthStr, heightStr, forceStr] = str.match(/^(\d*)x(\d*)(!?)$/)
+  const [, widthStr, heightStr, forceStr] = str.match(/^(\d*)x(\d*)(!?)$/)!
 
   const width = parseInt(widthStr, 10) || 0
   const height = parseInt(heightStr, 10) || 0
@@ -52,7 +53,7 @@ function extractResize(str: string): Resize {
 }
 
 function extractCrop(str: string): Crop {
-  const [, xStr, yStr, widthStr, heightStr] = str.match(/^(\d*)x(\d*):(\d*)x(\d*)$/)
+  const [, xStr, yStr, widthStr, heightStr] = str.match(/^(\d*)x(\d*):(\d*)x(\d*)$/)!
 
   const x = parseInt(xStr, 10) || 0
   const y = parseInt(yStr, 10) || 0

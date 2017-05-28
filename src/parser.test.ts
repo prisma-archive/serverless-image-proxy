@@ -1,5 +1,5 @@
 import test from 'ava'
-import { parseConfig } from './config'
+import { parseConfig } from './parser'
 
 test('resize: normal', t => {
   t.deepEqual(parseConfig(['500x300']), {

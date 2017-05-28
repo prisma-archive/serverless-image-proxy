@@ -1,87 +1,80 @@
 ***REMOVED***
-import * as gm from 'gm'
-import { parseConfig } from './config'
+import { parseConfig } from './parser'
+***REMOVED***
+***REMOVED***
 ***REMOVED***
 
-// const im = gm.subClass({imageMagick: true***REMOVED*** as any
-
 ***REMOVED***
 
-const bucket = 'files.graph.cool'
-
-export async function resize(event, context, callback) {
+***REMOVED***
 
   const [, projectId, fileSecret, ...params] = event.path.split('/')
 
-  try {
-  ***REMOVED***
-      Bucket: bucket,
-  ***REMOVED***
 ***REMOVED***
-
-  ***REMOVED***
-
-    if (ContentLength > 5 * 1024 * 1024) {
-      callback(null, {
-  ***REMOVED***
-  ***REMOVED***
 ***REMOVED***
-      return
-***REMOVED***
-
-    if (!ContentType.includes('image')) {
-      callback(null, {
-  ***REMOVED***
-  ***REMOVED***
 ***REMOVED***
 ***REMOVED***
 
-    const body = await (async() => {
-  ***REMOVED***
-      if (ContentType === 'image/gif' || ContentType === 'image/svg+xml' || params.length === 0) {
-  ***REMOVED***
-  ***REMOVED***
 ***REMOVED***
 
-      const thumborConfig = parseConfig(params)
-
-  ***REMOVED***
-  ***REMOVED***
-
-  ***REMOVED***
-  ***REMOVED***
-  ***REMOVED***
-  ***REMOVED***
-  ***REMOVED***
-  ***REMOVED***
-***REMOVED***)
+  if (ContentLength! > 5 * 1024 * 1024) {
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
 ***REMOVED***
 
-  ***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
 
-  ***REMOVED***
-  ***REMOVED***
+***REMOVED***
+***REMOVED***
+    if (ContentType === 'image/gif' || ContentType === 'image/svg+xml' || params.length === 0) {
+***REMOVED***
+***REMOVED***
+***REMOVED***
+
+    const thumborConfig = parseConfig(params as string[])
+
+***REMOVED***
+***REMOVED***
+
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+
+***REMOVED***
+
+***REMOVED***
+***REMOVED***
 ***REMOVED*** else {
-  ***REMOVED***
+***REMOVED***
 ***REMOVED***
 
-  ***REMOVED***
+***REMOVED***
 
-  ***REMOVED***
+***REMOVED***
 ***REMOVED***)()
+  
+  console.log(body.length)
 
-    callback(null, {
-  ***REMOVED***
 ***REMOVED***
-  ***REMOVED***
-  ***REMOVED***
-  ***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
 ***REMOVED***,
-  ***REMOVED***
-  ***REMOVED***
-***REMOVED***)
-
-***REMOVED*** catch (err) {
-    callback(err)
 ***REMOVED***
-}
+***REMOVED***
+***REMOVED***
+***REMOVED***

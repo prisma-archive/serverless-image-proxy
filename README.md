@@ -8,6 +8,7 @@ Resizes images using a Lambda function (aka Serverless Thumbor)
 * Images are cropped before they are resized
 * Cropping starts from left-top corner
 
+
 ## Syntax
 
 > URL: `DOMAIN` **/** `VERSION` **/** `PROJECT_ID` **/** `FILE_SECRET` **/** [ `CROP` **/** ] `RESIZE`
@@ -26,3 +27,12 @@ Resizes images using a Lambda function (aka Serverless Thumbor)
 > Format: `X` **x** `Y` **:** `WIDTH` **x** `HEIGHT`
 
 * `0x0:400x400`: Crops the image taking the first 400x400 square
+
+## Development
+
+### Install
+
+```sh
+npm install --ignore-scripts # yarn not supported yet
+npm run prepare
+```

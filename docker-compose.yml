@@ -2,7 +2,7 @@ version: "2"
 services:
 
   serverless:
-    image: lambci/lambda:build
+    image: lambci/lambda:build-nodejs6.10
     environment:
       S3_BUCKET: $S3_BUCKET
       STAGE: $STAGE
