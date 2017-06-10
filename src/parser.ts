@@ -1,6 +1,6 @@
 interface Resize {
-  width: number
-  height: number
+  width: number | undefined
+  height: number | undefined
   force: boolean
 }
 
@@ -12,15 +12,15 @@ interface Crop {
 }
 
 interface ThumborConfig {
-  resize: Resize
-  crop: Crop | null
+  resize: Resize | undefined
+  crop: Crop | undefined
 }
 
 interface Params {
   projectId: string
   fileSecret: string
-  resize: string | null
-  crop: string | null
+  resize: string | undefined
+  crop: string | undefined
 }
 
 // valid paths:
@@ -36,8 +36,8 @@ export function parseParams(path: string): Params {
 
   const projectId = parts[0]
   const fileSecret = parts[1]
-  let resize: (string | null) = null
-  let crop: (string | null) = null
+  let resize: (string | undefined) = undefined
+  let crop: (string | undefined) = undefined
 
   if (parts.length === 3) {
     resize = parts[2]
@@ -49,17 +49,15 @@ export function parseParams(path: string): Params {
   return { projectId, fileSecret, resize, crop }
 }
 
-export function getConfig(resize: string, crop?: string | null): ThumborConfig {
-  if (crop) {
-    return {
-      resize: extractResize(resize),
-      crop: extractCrop(crop),
-    }
-  } else {
-    return {
-      resize: extractResize(resize),
-      crop: null,
-    }
+interface ConfigProps {
+  resize?: string
+  crop?: string
+}
+
+export function getConfig(props: ConfigProps): ThumborConfig {
+  return {
+    resize: props.resize ? extractResize(props.resize) : undefined,
+    crop: props.crop ? extractCrop(props.crop) : undefined,
   }
 }
 
@@ -71,19 +69,19 @@ function extractResize(str: string): Resize {
 
   const [, widthStr, heightStr, forceStr] = matches
 
-  const width = parseInt(widthStr, 10) || 0
-  const height = parseInt(heightStr, 10) || 0
+  const width = parseInt(widthStr, 10) || undefined
+  const height = parseInt(heightStr, 10) || undefined
   const force = forceStr === '!'
 
-  if (width === 0 && height === 0) {
-    throw new Error(`At least width or height must be != 0`)
+  if (width === undefined && height === undefined) {
+    throw new Error(`At least width or height must be not undefined`)
   }
 
-  if (width < 0 || height < 0) {
+  if (width && width < 0 || height && height < 0) {
     throw new Error(`Width (${width}) or height (${height}) is < 0`)
   }
 
-  if (width > 10000 || height > 10000) {
+  if (width && width > 10000 || height && height > 10000) {
     throw new Error(`Width (${width}) or height (${height}) is > 10000`)
   }
 

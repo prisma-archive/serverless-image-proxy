@@ -64,12 +64,12 @@ export default callbackRuntime(async (event: APIGatewayEvent) => {
 
   const body = await (async () => {
     // return original for gifs, svgs or no params
-    if (ContentType === 'image/gif' || ContentType === 'image/svg+xml' || resize === null) {
+    if (ContentType === 'image/gif' || ContentType === 'image/svg+xml' || (resize === undefined && crop === undefined)) {
       const obj = await s3.getObject(options).promise()
       return (obj.Body as Buffer).toString('base64')
     }
 
-    const thumborConfig = getConfig(resize, crop)
+    const thumborConfig = getConfig({ resize, crop })
 
     const s3Resp = await s3.getObject(options).promise()
     const stream = sharp(s3Resp.Body)
@@ -85,12 +85,14 @@ export default callbackRuntime(async (event: APIGatewayEvent) => {
       })
     }
 
-    stream.resize(thumborConfig.resize.width, thumborConfig.resize.height)
+    if (thumborConfig.resize) {
+      stream.resize(thumborConfig.resize.width, thumborConfig.resize.height)
 
-    if (thumborConfig.resize.force) {
-      stream.ignoreAspectRatio()
-    } else {
-      stream.max()
+      if (thumborConfig.resize.force) {
+        stream.ignoreAspectRatio()
+      } else {
+        stream.max()
+      }
     }
 
     const buf = await stream.toBuffer()

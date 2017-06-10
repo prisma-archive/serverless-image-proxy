@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "tsc && ava",
+    "test": "tsc && ava .build/src/*.test.js",
     "prepare": "docker-compose run --rm serverless npm rebuild"
   },
   "devDependencies": {
