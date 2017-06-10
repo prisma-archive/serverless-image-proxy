@@ -4,4 +4,4 @@ node_modules
 .idea
 .webpack
 .envrc
-dist
+.build

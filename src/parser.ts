@@ -49,7 +49,7 @@ export function parseParams(path: string): Params {
   return { projectId, fileSecret, resize, crop }
 }
 
-export function getConfig(resize: string, crop: string | null): ThumborConfig {
+export function getConfig(resize: string, crop?: string | null): ThumborConfig {
   if (crop) {
     return {
       resize: extractResize(resize),
@@ -64,7 +64,12 @@ export function getConfig(resize: string, crop: string | null): ThumborConfig {
 }
 
 function extractResize(str: string): Resize {
-  const [, widthStr, heightStr, forceStr] = str.match(/^(\d*)x(\d*)(!?)$/)!
+  const matches = str.match(/^(\d*)x(\d*)(!?)$/)!
+  if (!matches) {
+    throw new Error(`Invalid resize string: ${str}`)
+  }
+
+  const [, widthStr, heightStr, forceStr] = matches
 
   const width = parseInt(widthStr, 10) || 0
   const height = parseInt(heightStr, 10) || 0

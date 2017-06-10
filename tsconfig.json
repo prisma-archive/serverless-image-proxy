@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "preserveConstEnums": true,
+    "strictNullChecks": true,
+    "target": "es5",
+    "sourceMap": true,
+    "outDir": ".build",
+    "rootDir": ".",
+    "moduleResolution": "node",
+    "lib": ["es2016"]
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
+  "include": [
+    "./src/**/*.ts"
+  ]
+}
