@@ -1,109 +1,111 @@
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+import * as AWS from 'aws-sdk'
+import { getConfig, parseParams } from './parser'
+import { callbackRuntime } from 'lambda-helpers'
+import { APIGatewayEvent } from 'aws-lambda'
+import { GraphQLClient } from 'graphql-request'
+const sharp = require('sharp')
 
-***REMOVED***
+import 'source-map-support/register'
 
-***REMOVED***
+const s3 = new AWS.S3()
 
-***REMOVED***
+export default callbackRuntime(async (event: APIGatewayEvent) => {
 
-***REMOVED***
+  // NOTE currently needed for backward compatibility
+  if (event.path.split('/')[1] !== 'v1') {
 
-    const client = new GraphQLClient('https://api.graph.cool/simple/v1/cj39843ru116t0179gyb3fepl', {
-***REMOVED***
-        Authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE0OTYwMDczOTcsImNsaWVudElkIjoiY2lvcTk1b2VjMDJrajAxbzBvbmpvcHBmOSIsInByb2plY3RJZCI6ImNqMzk4NDNydTExNnQwMTc5Z3liM2ZlcGwiLCJwZXJtYW5lbnRBdXRoVG9rZW5JZCI6ImNqMzk4NmZxbjEycDAwMTU1bDJyYXRsM2cifQ.Uz8_Ej7g41KtLcEDc62T2U75ax3zFkNP2HHHzVGHuuA',
-***REMOVED***
-***REMOVED***)
+    try {
+      // log projectId of projects using the old API version
+      const client = new GraphQLClient(process.env.GRAPHCOOL_ENDPOINT, {
+        headers: {
+          Authorization: `Bearer ${process.env.GRAPHCOOL_PAT}`,
+        }
+      })
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+      await client.request(`mutation {
+        createApiUser(projectId: "${event.path.split('/')[1]}") { id }
+      }`)
+    } catch (e) {
+      if (e.response.errors[0].code !== 3010) {
+        throw e
+      }
+    }
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***,
-***REMOVED***
-***REMOVED***
+    return {
+      statusCode: 301,
+      headers: {
+        'Location': `https://images.graph.cool/v1${event.path}`
+      },
+    }
+  }
 
-***REMOVED***
+  const {projectId, fileSecret, crop, resize} = parseParams(event.path)
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+  const options = {
+    Bucket: process.env.BUCKET_NAME,
+    Key: `${projectId}/${fileSecret}`,
+  }
 
-***REMOVED***
+  const {ContentLength, ContentType, ContentDisposition} = await s3.headObject(options).promise()
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+  if (ContentLength! > 25 * 1024 * 1024) {
+    return {
+      statusCode: 400,
+      body: 'File too big',
+    }
+  }
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+  if (!ContentType!.includes('image')) {
+    return {
+      statusCode: 400,
+      body: 'File not an image',
+    }
+  }
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+  const body = await (async () => {
+    // return original for gifs, svgs or no params
+    if (ContentType === 'image/gif' || ContentType === 'image/svg+xml' || resize === null) {
+      const obj = await s3.getObject(options).promise()
+      return (obj.Body as Buffer).toString('base64')
+    }
 
-***REMOVED***
+    const thumborConfig = getConfig(resize, crop)
 
-***REMOVED***
-***REMOVED***
+    const s3Resp = await s3.getObject(options).promise()
+    const stream = sharp(s3Resp.Body)
 
-***REMOVED***
+    stream.limitInputPixels(false)
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+    if (thumborConfig.crop) {
+      stream.extract({
+        left: thumborConfig.crop.x,
+        top: thumborConfig.crop.y,
+        width: thumborConfig.crop.width,
+        height: thumborConfig.crop.height,
+      })
+    }
 
-***REMOVED***
+    stream.resize(thumborConfig.resize.width, thumborConfig.resize.height)
 
-***REMOVED***
-***REMOVED***
-***REMOVED*** else {
-***REMOVED***
-***REMOVED***
+    if (thumborConfig.resize.force) {
+      stream.ignoreAspectRatio()
+    } else {
+      stream.max()
+    }
 
-***REMOVED***
+    const buf = await stream.toBuffer()
 
-***REMOVED***
-***REMOVED***)()
+    return buf.toString('base64')
+  })()
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***,
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+  return {
+    statusCode: 200,
+    headers: {
+      'Content-Type': ContentType,
+      'Content-Disposition': ContentDisposition,
+      'Cache-Control': 'max-age=31536000',
+    },
+    body,
+    isBase64Encoded: true,
+  }
+})

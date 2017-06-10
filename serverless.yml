@@ -34,6 +34,8 @@ functions:
           contentHandling: CONVERT_TO_BINARY
     environment:
       BUCKET_NAME: 'files.graph.cool'
+      GRAPHCOOL_ENDPOINT: ${env:GRAPHCOOL_ENDPOINT}
+      GRAPHCOOL_PAT: ${env:GRAPHCOOL_PAT}
 
 resources:
   Resources:

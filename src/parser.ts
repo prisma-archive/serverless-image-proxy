@@ -32,7 +32,7 @@ export function parseParams(path: string): Params {
 
   if (parts.length < 2) {
     throw new Error(`Invalid path: ${path}`)
-***REMOVED***
+  }
 
   const projectId = parts[0]
   const fileSecret = parts[1]
@@ -41,26 +41,26 @@ export function parseParams(path: string): Params {
 
   if (parts.length === 3) {
     resize = parts[2]
-***REMOVED*** else if (parts.length === 4) {
+  } else if (parts.length === 4) {
     crop = parts[2]
     resize = parts[3]
-***REMOVED***
+  }
 
-***REMOVED*** projectId, fileSecret, resize, crop }
+  return { projectId, fileSecret, resize, crop }
 }
 
 export function getConfig(resize: string, crop: string | null): ThumborConfig {
   if (crop) {
-***REMOVED***
+    return {
       resize: extractResize(resize),
       crop: extractCrop(crop),
-***REMOVED***
-***REMOVED*** else {
-***REMOVED***
+    }
+  } else {
+    return {
       resize: extractResize(resize),
       crop: null,
-***REMOVED***
-***REMOVED***
+    }
+  }
 }
 
 function extractResize(str: string): Resize {
@@ -72,17 +72,17 @@ function extractResize(str: string): Resize {
 
   if (width === 0 && height === 0) {
     throw new Error(`At least width or height must be != 0`)
-***REMOVED***
+  }
 
   if (width < 0 || height < 0) {
-    throw new Error(`Width (${width***REMOVED*** or height (${height***REMOVED*** is < 0`)
-***REMOVED***
+    throw new Error(`Width (${width}) or height (${height}) is < 0`)
+  }
 
   if (width > 10000 || height > 10000) {
-    throw new Error(`Width (${width***REMOVED*** or height (${height***REMOVED*** is > 10000`)
-***REMOVED***
+    throw new Error(`Width (${width}) or height (${height}) is > 10000`)
+  }
 
-***REMOVED***width, height, force}
+  return {width, height, force}
 }
 
 function extractCrop(str: string): Crop {
@@ -95,5 +95,5 @@ function extractCrop(str: string): Crop {
 
   // TODO test for errors
 
-***REMOVED***width, height, x, y}
+  return {width, height, x, y}
 }
