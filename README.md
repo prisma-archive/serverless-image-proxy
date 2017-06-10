@@ -30,9 +30,11 @@ Resizes images using a Lambda function (aka Serverless Thumbor)
 
 ## Development
 
+Docker required to pre-build native NPM modules ([sharp](https://github.com/lovell/sharp)).
+
 ### Install
 
 ```sh
-npm install --ignore-scripts # yarn not supported yet
+npm install --ignore-scripts
 npm run prepare
 ```
