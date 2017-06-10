@@ -14,6 +14,7 @@ provider:
 
 plugins:
   - serverless-plugin-typescript
+  - serverless-apigwy-binary
 
 #package:
 #  exclude:
@@ -30,6 +31,7 @@ functions:
       - http:
           path: '{proxy+}'
           method: get
+          contentHandling: CONVERT_TO_BINARY
     environment:
       BUCKET_NAME: 'files.graph.cool'
 
@@ -43,8 +45,7 @@ resources:
     pathmapping:
       Type: AWS::ApiGateway::BasePathMapping
       Properties:
-        #BasePath: 'v1'
-        DomainName: 'images.graph.cool'
+        DomainName: 'images-v1.graph.cool'
         RestApiId:
           Ref: ApiGatewayRestApi
         Stage: dev

@@ -1,23 +1,4 @@
 ***REMOVED***
-import { parseConfig } from './parser'
-***REMOVED***
-***REMOVED***
-***REMOVED***
-
-***REMOVED***
-
-***REMOVED***
-
-  const [, projectId, fileSecret, ...params] = event.path.split('/')
-
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-
-***REMOVED***
-
-  if (ContentLength! > 5 * 1024 * 1024) {
 ***REMOVED***
 ***REMOVED***
 ***REMOVED***
@@ -25,6 +6,23 @@ import { parseConfig } from './parser'
 ***REMOVED***
 
 ***REMOVED***
+
+***REMOVED***
+
+***REMOVED***
+
+***REMOVED***
+
+    const client = new GraphQLClient('https://api.graph.cool/simple/v1/cj39843ru116t0179gyb3fepl', {
+***REMOVED***
+        Authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE0OTYwMDczOTcsImNsaWVudElkIjoiY2lvcTk1b2VjMDJrajAxbzBvbmpvcHBmOSIsInByb2plY3RJZCI6ImNqMzk4NDNydTExNnQwMTc5Z3liM2ZlcGwiLCJwZXJtYW5lbnRBdXRoVG9rZW5JZCI6ImNqMzk4NmZxbjEycDAwMTU1bDJyYXRsM2cifQ.Uz8_Ej7g41KtLcEDc62T2U75ax3zFkNP2HHHzVGHuuA',
+***REMOVED***
+***REMOVED***)
+
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
 ***REMOVED***
 ***REMOVED***
 ***REMOVED***
@@ -33,14 +31,47 @@ import { parseConfig } from './parser'
 
 ***REMOVED***
 ***REMOVED***
-    if (ContentType === 'image/gif' || ContentType === 'image/svg+xml' || params.length === 0) {
+***REMOVED***
+***REMOVED***
+***REMOVED***,
+***REMOVED***
+***REMOVED***
+
+***REMOVED***
+
+***REMOVED***
 ***REMOVED***
 ***REMOVED***
 ***REMOVED***
 
-    const thumborConfig = parseConfig(params as string[])
+***REMOVED***
 
 ***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+
+***REMOVED***
+
+***REMOVED***
+***REMOVED***
+
 ***REMOVED***
 
 ***REMOVED***
@@ -64,8 +95,6 @@ import { parseConfig } from './parser'
 
 ***REMOVED***
 ***REMOVED***)()
-  
-  console.log(body.length)
 
 ***REMOVED***
 ***REMOVED***

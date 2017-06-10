@@ -16,16 +16,49 @@ interface ThumborConfig {
   crop: Crop | null
 }
 
-export function parseConfig(parts: string[]): ThumborConfig {
-  if (parts.length === 1) {
+interface Params {
+  projectId: string
+  fileSecret: string
+  resize: string | null
+  crop: string | null
+}
+
+// valid paths:
+// /v1/ciwkuhq2s0dbf0131rcb3isiq/cj37jinmt008o0108zwhax711
+// /v1/ciwkuhq2s0dbf0131rcb3isiq/cj37jinmt008o0108zwhax711/600x200
+// /v1/ciwkuhq2s0dbf0131rcb3isiq/cj37jinmt008o0108zwhax711/600x200/20x20
+export function parseParams(path: string): Params {
+  const [,,...parts] = path.split('/')
+
+  if (parts.length < 2) {
+    throw new Error(`Invalid path: ${path}`)
 ***REMOVED***
-      resize: extractResize(parts[0]),
-      crop: null,
+
+  const projectId = parts[0]
+  const fileSecret = parts[1]
+  let resize: (string | null) = null
+  let crop: (string | null) = null
+
+  if (parts.length === 3) {
+    resize = parts[2]
+***REMOVED*** else if (parts.length === 4) {
+    crop = parts[2]
+    resize = parts[3]
+***REMOVED***
+
+***REMOVED*** projectId, fileSecret, resize, crop }
+}
+
+export function getConfig(resize: string, crop: string | null): ThumborConfig {
+  if (crop) {
+***REMOVED***
+      resize: extractResize(resize),
+      crop: extractCrop(crop),
 ***REMOVED***
 ***REMOVED*** else {
 ***REMOVED***
-      resize: extractResize(parts[1]),
-      crop: extractCrop(parts[0]),
+      resize: extractResize(resize),
+      crop: null,
 ***REMOVED***
 ***REMOVED***
 }

@@ -1,8 +1,8 @@
 import test from 'ava'
-import { parseConfig } from './parser'
+import { getConfig } from './parser'
 
 test('resize: normal', t => {
-  t.deepEqual(parseConfig(['500x300']), {
+  t.deepEqual(getConfig(['500x300']), {
     resize: {
       width: 500,
       height: 300,
@@ -13,7 +13,7 @@ test('resize: normal', t => {
 ***REMOVED***
 
 test('resize: height - keep ratio', t => {
-  t.deepEqual(parseConfig(['x300']), {
+  t.deepEqual(getConfig(['x300']), {
     resize: {
       width: 0,
       height: 300,
@@ -24,7 +24,7 @@ test('resize: height - keep ratio', t => {
 ***REMOVED***
 
 test('resize: height - keep ratio', t => {
-  t.deepEqual(parseConfig(['500x']), {
+  t.deepEqual(getConfig(['500x']), {
     resize: {
       width: 500,
       height: 0,
@@ -35,7 +35,7 @@ test('resize: height - keep ratio', t => {
 ***REMOVED***
 
 test('resize: force', t => {
-  t.deepEqual(parseConfig(['500x300!']), {
+  t.deepEqual(getConfig(['500x300!']), {
     resize: {
       width: 500,
       height: 300,
@@ -46,27 +46,27 @@ test('resize: force', t => {
 ***REMOVED***
 
 test('resize: throws error for negative height', t => {
-  t.throws(() => parseConfig(['500x-1']))
+  t.throws(() => getConfig(['500x-1']))
 ***REMOVED***
 
 test('resize: throws error for negative width', t => {
-  t.throws(() => parseConfig(['-1x300']))
+  t.throws(() => getConfig(['-1x300']))
 ***REMOVED***
 
 test('resize: throws error for no dimenson', t => {
-  t.throws(() => parseConfig(['x']))
+  t.throws(() => getConfig(['x']))
 ***REMOVED***
 
 test('resize: throws error for too big height', t => {
-  t.throws(() => parseConfig(['500x10001']))
+  t.throws(() => getConfig(['500x10001']))
 ***REMOVED***
 
 test('resize: throws error for too big width', t => {
-  t.throws(() => parseConfig(['10001x300']))
+  t.throws(() => getConfig(['10001x300']))
 ***REMOVED***
 
 test('crop: left top 600x400', t => {
-  t.deepEqual(parseConfig(['0x0:600x400', '500x300']), {
+  t.deepEqual(getConfig(['0x0:600x400', '500x300']), {
     resize: {
       width: 500,
       height: 300,
