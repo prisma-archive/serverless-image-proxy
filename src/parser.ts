@@ -16,7 +16,7 @@ interface Config {
   crop: Crop | undefined
 }
 
-interface Params {
+export interface Params {
   projectId: string
   fileSecret: string
   resize: string | undefined
@@ -30,7 +30,7 @@ const cropPattern = /^(\d*)x(\d*):(\d*)x(\d*)$/
 // /v1/ciwkuhq2s0dbf0131rcb3isiq/cj37jinmt008o0108zwhax711
 // /v1/ciwkuhq2s0dbf0131rcb3isiq/cj37jinmt008o0108zwhax711/600x200
 // /v1/ciwkuhq2s0dbf0131rcb3isiq/cj37jinmt008o0108zwhax711/600x200/20x20
-export function parseParams(path: string): Params {
+export function parseParams(path: string): [(Error | null), (Params | null)] {
   // also trim trailing slash
   const [,,...parts] = path.replace(/\/$/, '').split('/')
 
@@ -49,7 +49,7 @@ export function parseParams(path: string): Params {
     } else if (parts[2].match(cropPattern)) {
       crop = parts[2]
     } else {
-      throw new Error(`Invalid resize or crop pattern: ${parts[2]}`)
+      return [new Error(`Invalid resize or crop pattern: ${parts[2]}`), null]
     }
   }
 
@@ -59,11 +59,11 @@ export function parseParams(path: string): Params {
     } else if (parts[3].match(cropPattern)) {
       crop = parts[3]
     } else {
-      throw new Error(`Invalid resize or crop pattern: ${parts[3]}`)
+      return [new Error(`Invalid resize or crop pattern: ${parts[3]}`), null]
     }
   }
 
-  return { projectId, fileSecret, resize, crop }
+  return [null, { projectId, fileSecret, resize, crop }]
 }
 
 interface ConfigProps {

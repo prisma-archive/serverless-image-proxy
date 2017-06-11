@@ -1,7 +1,7 @@
 import * as AWS from 'aws-sdk'
-import { getConfig, parseParams } from './parser'
+import { getConfig, parseParams, Params } from './parser'
 import { callbackRuntime } from 'lambda-helpers'
-import { APIGatewayEvent } from 'aws-lambda'
+import { APIGatewayEvent, ProxyResult } from 'aws-lambda'
 import { GraphQLClient } from 'graphql-request'
 const sharp = require('sharp')
 
@@ -39,7 +39,16 @@ export default callbackRuntime(async (event: APIGatewayEvent) => {
     }
   }
 
-  const {projectId, fileSecret, crop, resize} = parseParams(event.path)
+  const [paramsErr, params] = parseParams(event.path)
+
+  if (paramsErr) {
+    return {
+      statusCode: 400,
+      body: paramsErr.toString(),
+    }
+  }
+
+  const {projectId, fileSecret, crop, resize} = params!
 
   const options = {
     Bucket: process.env.BUCKET_NAME,
@@ -62,52 +71,53 @@ export default callbackRuntime(async (event: APIGatewayEvent) => {
     }
   }
 
-  const body = await (async () => {
-    // return original for gifs, svgs or no params
-    if (ContentType === 'image/gif' || ContentType === 'image/svg+xml' || (resize === undefined && crop === undefined)) {
-      const obj = await s3.getObject(options).promise()
-      return (obj.Body as Buffer).toString('base64')
+  // return original for gifs, svgs or no params
+  if (ContentType === 'image/gif' || ContentType === 'image/svg+xml' || (resize === undefined && crop === undefined)) {
+    const obj = await s3.getObject(options).promise()
+    const body = (obj.Body as Buffer).toString('base64')
+    return base64Response(body, ContentType!, ContentDisposition!)
+  }
+
+
+  const s3Resp = await s3.getObject(options).promise()
+  const stream = sharp(s3Resp.Body)
+
+  try {
+    const config = getConfig({ resize, crop })
+
+    stream.limitInputPixels(false)
+
+    if (config.crop) {
+      stream.extract({
+        left: config.crop.x,
+        top: config.crop.y,
+        width: config.crop.width,
+        height: config.crop.height,
+      })
     }
 
+    if (config.resize) {
+      stream.resize(config.resize.width, config.resize.height)
 
-    const s3Resp = await s3.getObject(options).promise()
-    const stream = sharp(s3Resp.Body)
-
-    try {
-      const config = getConfig({ resize, crop })
-
-      stream.limitInputPixels(false)
-
-      if (config.crop) {
-        stream.extract({
-          left: config.crop.x,
-          top: config.crop.y,
-          width: config.crop.width,
-          height: config.crop.height,
-        })
-      }
-
-      if (config.resize) {
-        stream.resize(config.resize.width, config.resize.height)
-
-        if (config.resize.force) {
-          stream.ignoreAspectRatio()
-        } else {
-          stream.max()
-        }
-      }
-    } catch (err) {
-      return {
-        statusCode: 400,
-        body: err.toString(),
+      if (config.resize.force) {
+        stream.ignoreAspectRatio()
+      } else {
+        stream.max()
       }
     }
+  } catch (err) {
+    return {
+      statusCode: 400,
+      body: err.toString(),
+    }
+  }
 
-    const buf = await stream.toBuffer()
+  const buf = await stream.toBuffer()
 
-    return buf.toString('base64')
-  })()
+  return base64Response(buf.toString('base64'), ContentType!, ContentDisposition!)
+})
 
+function base64Response(body: string, ContentType: string, ContentDisposition: string) {
   return {
     statusCode: 200,
     headers: {
@@ -118,4 +128,4 @@ export default callbackRuntime(async (event: APIGatewayEvent) => {
     body,
     isBase64Encoded: true,
   }
-})
+}
