@@ -69,29 +69,37 @@ export default callbackRuntime(async (event: APIGatewayEvent) => {
       return (obj.Body as Buffer).toString('base64')
     }
 
-    const thumborConfig = getConfig({ resize, crop })
 
     const s3Resp = await s3.getObject(options).promise()
     const stream = sharp(s3Resp.Body)
 
-    stream.limitInputPixels(false)
+    try {
+      const config = getConfig({ resize, crop })
 
-    if (thumborConfig.crop) {
-      stream.extract({
-        left: thumborConfig.crop.x,
-        top: thumborConfig.crop.y,
-        width: thumborConfig.crop.width,
-        height: thumborConfig.crop.height,
-      })
-    }
+      stream.limitInputPixels(false)
 
-    if (thumborConfig.resize) {
-      stream.resize(thumborConfig.resize.width, thumborConfig.resize.height)
+      if (config.crop) {
+        stream.extract({
+          left: config.crop.x,
+          top: config.crop.y,
+          width: config.crop.width,
+          height: config.crop.height,
+        })
+      }
 
-      if (thumborConfig.resize.force) {
-        stream.ignoreAspectRatio()
-      } else {
-        stream.max()
+      if (config.resize) {
+        stream.resize(config.resize.width, config.resize.height)
+
+        if (config.resize.force) {
+          stream.ignoreAspectRatio()
+        } else {
+          stream.max()
+        }
+      }
+    } catch (err) {
+      return {
+        statusCode: 400,
+        body: err.toString(),
       }
     }
 

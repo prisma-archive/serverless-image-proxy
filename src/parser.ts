@@ -11,7 +11,7 @@ interface Crop {
   height: number
 }
 
-interface ThumborConfig {
+interface Config {
   resize: Resize | undefined
   crop: Crop | undefined
 }
@@ -71,7 +71,7 @@ interface ConfigProps {
   crop?: string
 }
 
-export function getConfig(props: ConfigProps): ThumborConfig {
+export function getConfig(props: ConfigProps): Config {
   return {
     resize: props.resize ? extractResize(props.resize) : undefined,
     crop: props.crop ? extractCrop(props.crop) : undefined,
@@ -81,21 +81,22 @@ export function getConfig(props: ConfigProps): ThumborConfig {
 function extractResize(str: string): Resize {
   const [, widthStr, heightStr, forceStr] = str.match(resizePattern)!
 
-  const width = parseInt(widthStr, 10) || undefined
-  const height = parseInt(heightStr, 10) || undefined
-  const force = forceStr === '!'
-
-  if (width === undefined && height === undefined) {
-    throw new Error(`At least width or height must be not undefined`)
+  if (parseInt(widthStr, 10) <= 0 || parseInt(heightStr, 10) <= 0) {
+    throw new Error(`Width or height must be positive`)
   }
 
-  if (width && width < 0 || height && height < 0) {
-    throw new Error(`Width (${width}) or height (${height}) is < 0`)
+  const width = parseInt(widthStr, 10) || undefined
+  const height = parseInt(heightStr, 10) || undefined
+
+  if (width === undefined && height === undefined) {
+    throw new Error(`At least width or height must be provided`)
   }
 
   if (width && width > 10000 || height && height > 10000) {
-    throw new Error(`Width (${width}) or height (${height}) is > 10000`)
+    throw new Error(`Limit exceeded. Width (${width}) or height (${height}) must not be bigger than 10000`)
   }
+
+  const force = forceStr === '!'
 
   return {width, height, force}
 }
