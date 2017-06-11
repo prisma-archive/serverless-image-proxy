@@ -3,12 +3,5 @@ services:
 
   serverless:
     image: lambci/lambda:build-nodejs6.10
-    environment:
-      S3_BUCKET: $S3_BUCKET
-      STAGE: $STAGE
-      STACK: $STACK
-      AWS_REGION: $AWS_REGION
-      AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
-      AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
     volumes:
     - .:/var/task
