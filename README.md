@@ -37,4 +37,5 @@ Docker required to pre-build native NPM modules ([sharp](https://github.com/love
 ```sh
 npm install --ignore-scripts
 npm run prepare
+serverless deploy
 ```
