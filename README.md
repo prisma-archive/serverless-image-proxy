@@ -11,7 +11,7 @@ Resizes images using a Lambda function (aka Serverless Thumbor)
 
 ## Syntax
 
-> URL: `DOMAIN` **/** `VERSION` **/** `PROJECT_ID` **/** `FILE_SECRET` **/** [ `CROP` **/** ] `RESIZE`
+> URL: `DOMAIN` **/** `VERSION` **/** `PROJECT_ID` **/** `FILE_SECRET` **/** [ `CROP` **/** ] `RESIZE` [  **/** `NAME` ]
 
 ### Resize
 
@@ -27,6 +27,20 @@ Resizes images using a Lambda function (aka Serverless Thumbor)
 > Format: `X` **x** `Y` **:** `WIDTH` **x** `HEIGHT`
 
 * `0x0:400x400`: Crops the image taking the first 400x400 square
+
+### Name
+
+Name of image to improve indexing of images with search engines. 
+
+Supported extensions: 
+
+* png
+* jpg
+* jpeg
+* svg
+* gif
+* bmp
+* webp
 
 ## Development
 
