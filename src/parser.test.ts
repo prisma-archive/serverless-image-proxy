@@ -1,5 +1,5 @@
 import test from 'ava'
-import { getConfig } from './parser'
+import { getConfig, parseParams } from './parser'
 
 test('resize: normal', t => {
   t.deepEqual(getConfig({ resize: '500x300' }), {
@@ -82,3 +82,54 @@ test('crop: left top 600x400', t => {
 })
 
 // TODO write more cropping tests
+
+test('name: only name', t => {
+  t.deepEqual(
+    parseParams(
+      '/v1/ciwkuhq2s0dbf0131rcb3isiq/cj37jinmt008o0108zwhax711/Graphcool.jpg',
+    ),
+    [
+      null,
+      {
+        projectId: 'ciwkuhq2s0dbf0131rcb3isiq',
+        fileSecret: 'cj37jinmt008o0108zwhax711',
+        resize: undefined,
+        crop: undefined,
+      },
+    ],
+  )
+})
+
+test('name: name with resize', t => {
+  t.deepEqual(
+    parseParams(
+      '/v1/ciwkuhq2s0dbf0131rcb3isiq/cj37jinmt008o0108zwhax711/600x200/Graphcool.jpg',
+    ),
+    [
+      null,
+      {
+        projectId: 'ciwkuhq2s0dbf0131rcb3isiq',
+        fileSecret: 'cj37jinmt008o0108zwhax711',
+        resize: '600x200',
+        crop: undefined,
+      },
+    ],
+  )
+})
+
+test('name: name with resize and crop', t => {
+  t.deepEqual(
+    parseParams(
+      '/v1/ciwkuhq2s0dbf0131rcb3isiq/cj37jinmt008o0108zwhax711/600x200/0x0:20x20/Graphcool.jpg',
+    ),
+    [
+      null,
+      {
+        projectId: 'ciwkuhq2s0dbf0131rcb3isiq',
+        fileSecret: 'cj37jinmt008o0108zwhax711',
+        resize: '600x200',
+        crop: '0x0:20x20',
+      },
+    ],
+  )
+})
