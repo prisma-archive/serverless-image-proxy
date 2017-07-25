@@ -50,8 +50,8 @@ export function parseParams(path: string): [(Error | null), (Params | null)] {
       resize = parts[2]
     } else if (parts[2].match(cropPattern)) {
       crop = parts[2]
-    } else {
-      return [new Error(`Invalid resize or crop pattern: ${parts[2]}`), null]
+    } else if (!parts[2].match(namePattern)) {
+      return [new Error(`Invalid resize, crop pattern or name of image: ${parts[2]}`), null]
     }
   }
 
