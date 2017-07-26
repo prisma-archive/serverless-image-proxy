@@ -25,11 +25,13 @@ export interface Params {
 
 const resizePattern = /^(\d*)x(\d*)(!?)$/
 const cropPattern = /^(\d*)x(\d*):(\d*)x(\d*)$/
+const namePattern = /^(\w+)(.(png|jpg|jpeg|svg|gif|bmp|webp))?$/
 
 // valid paths:
 // /v1/ciwkuhq2s0dbf0131rcb3isiq/cj37jinmt008o0108zwhax711
 // /v1/ciwkuhq2s0dbf0131rcb3isiq/cj37jinmt008o0108zwhax711/600x200
 // /v1/ciwkuhq2s0dbf0131rcb3isiq/cj37jinmt008o0108zwhax711/600x200/20x20
+// /v1/ciwkuhq2s0dbf0131rcb3isiq/cj37jinmt008o0108zwhax711/600x200/20x20/Graphcool.jpg
 export function parseParams(path: string): [(Error | null), (Params | null)] {
   // also trim trailing slash
   const [,,...parts] = path.replace(/\/$/, '').split('/')
@@ -48,8 +50,8 @@ export function parseParams(path: string): [(Error | null), (Params | null)] {
       resize = parts[2]
     } else if (parts[2].match(cropPattern)) {
       crop = parts[2]
-    } else {
-      return [new Error(`Invalid resize or crop pattern: ${parts[2]}`), null]
+    } else if (!parts[2].match(namePattern)) {
+      return [new Error(`Invalid resize, crop pattern or name of image: ${parts[2]}`), null]
     }
   }
 
@@ -58,8 +60,14 @@ export function parseParams(path: string): [(Error | null), (Params | null)] {
       resize = parts[3]
     } else if (parts[3].match(cropPattern)) {
       crop = parts[3]
-    } else {
-      return [new Error(`Invalid resize or crop pattern: ${parts[3]}`), null]
+    } else if (!parts[3].match(namePattern)) {
+      return [new Error(`Invalid resize, crop pattern or name of image: ${parts[3]}`), null]
+    }
+  }
+
+  if(parts.length >= 5) {
+    if(!parts[4].match(namePattern)) {
+      return [new Error(`Invalid name of image: ${parts[4]}`), null]
     }
   }
 
