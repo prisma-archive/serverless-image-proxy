@@ -16,12 +16,13 @@ plugins:
   - serverless-plugin-typescript
   - serverless-apigwy-binary
 
-#package:
+package:
 #  exclude:
 #    - node_modules/**
 #  include:
 #    - node_modules/sharp/**
 #    - node_modules/lambda-helpers/**
+  excludeDevDependencies: false
 
 functions:
 
