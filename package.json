@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "aws-sdk": "^2.7.27",
-    "graphql-request": "^1.1.2",
+    "graphql-request": "^1.3.3",
     "lambda-helpers": "^0.2.1",
     "sharp": "^0.18.2",
     "source-map-support": "^0.4.15"
