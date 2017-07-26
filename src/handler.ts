@@ -16,9 +16,9 @@ export default callbackRuntime(async (event: APIGatewayEvent) => {
 
     try {
       // log projectId of projects using the old API version
-      const client = new GraphQLClient(process.env.GRAPHCOOL_ENDPOINT, {
+      const client = new GraphQLClient(process.env['GRAPHCOOL_ENDPOINT']!, {
         headers: {
-          Authorization: `Bearer ${process.env.GRAPHCOOL_PAT}`,
+          Authorization: `Bearer ${process.env['GRAPHCOOL_PAT']}`,
         }
       })
 
@@ -51,7 +51,7 @@ export default callbackRuntime(async (event: APIGatewayEvent) => {
   const {projectId, fileSecret, crop, resize} = params!
 
   const options = {
-    Bucket: process.env.BUCKET_NAME,
+    Bucket: process.env['BUCKET_NAME']!,
     Key: `${projectId}/${fileSecret}`,
   }
 

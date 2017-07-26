@@ -4,16 +4,16 @@
     "prepare": "docker-compose run --rm serverless npm rebuild"
   },
   "devDependencies": {
-    "@types/node": "^7.0.0",
-    "@types/aws-lambda": "^0.0.10",
-    "ava": "^0.17.0",
-    "serverless-plugin-typescript": "^0.2.0"
+    "@types/aws-lambda": "^0.0.15",
+    "@types/node": "^8.0.16",
+    "ava": "^0.21.0",
+    "serverless-plugin-typescript": "^1.0.0"
   },
   "dependencies": {
     "aws-sdk": "^2.7.27",
-    "lambda-helpers": "^0.1.0",
-    "sharp": "^0.17.1",
     "graphql-request": "^1.1.2",
+    "lambda-helpers": "^0.2.1",
+    "sharp": "^0.18.2",
     "source-map-support": "^0.4.15"
   }
 }
