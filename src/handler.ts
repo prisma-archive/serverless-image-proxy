@@ -33,6 +33,7 @@ export default callbackRuntime(async (event: APIGatewayEvent) => {
 
     return {
       statusCode: 301,
+      body: '',
       headers: {
         'Location': `https://images.graph.cool/v1${event.path}`
       },
