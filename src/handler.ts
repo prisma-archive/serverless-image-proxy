@@ -10,16 +10,14 @@ import 'source-map-support/register'
 const s3 = new AWS.S3()
 
 export default callbackRuntime(async (event: APIGatewayEvent) => {
-
   // NOTE currently needed for backward compatibility
   if (event.path.split('/')[1] !== 'v1') {
-
     try {
       // log projectId of projects using the old API version
       const client = new GraphQLClient(process.env['GRAPHCOOL_ENDPOINT']!, {
         headers: {
           Authorization: `Bearer ${process.env['GRAPHCOOL_PAT']}`,
-        }
+        },
       })
 
       await client.request(`mutation {
@@ -35,7 +33,7 @@ export default callbackRuntime(async (event: APIGatewayEvent) => {
       statusCode: 301,
       body: '',
       headers: {
-        'Location': `https://images.graph.cool/v1${event.path}`
+        Location: `https://images.graph.cool/v1${event.path}`,
       },
     }
   }
@@ -49,14 +47,18 @@ export default callbackRuntime(async (event: APIGatewayEvent) => {
     }
   }
 
-  const {projectId, fileSecret, crop, resize} = params!
+  const { projectId, fileSecret, crop, resize } = params!
 
   const options = {
     Bucket: process.env['BUCKET_NAME']!,
     Key: `${projectId}/${fileSecret}`,
   }
 
-  const {ContentLength, ContentType, ContentDisposition} = await s3.headObject(options).promise()
+  const {
+    ContentLength,
+    ContentType,
+    ContentDisposition,
+  } = await s3.headObject(options).promise()
 
   if (ContentLength! > 25 * 1024 * 1024) {
     return {
@@ -73,12 +75,15 @@ export default callbackRuntime(async (event: APIGatewayEvent) => {
   }
 
   // return original for gifs, svgs or no params
-  if (ContentType === 'image/gif' || ContentType === 'image/svg+xml' || (resize === undefined && crop === undefined)) {
+  if (
+    ContentType === 'image/gif' ||
+    ContentType === 'image/svg+xml' ||
+    (resize === undefined && crop === undefined)
+  ) {
     const obj = await s3.getObject(options).promise()
     const body = (obj.Body as Buffer).toString('base64')
     return base64Response(body, ContentType!, ContentDisposition!)
   }
-
 
   const s3Resp = await s3.getObject(options).promise()
   const stream = sharp(s3Resp.Body)
@@ -115,10 +120,18 @@ export default callbackRuntime(async (event: APIGatewayEvent) => {
 
   const buf = await stream.toBuffer()
 
-  return base64Response(buf.toString('base64'), ContentType!, ContentDisposition!)
+  return base64Response(
+    buf.toString('base64'),
+    ContentType!,
+    ContentDisposition!,
+  )
 })
 
-function base64Response(body: string, ContentType: string, ContentDisposition: string) {
+function base64Response(
+  body: string,
+  ContentType: string,
+  ContentDisposition: string,
+) {
   return {
     statusCode: 200,
     headers: {
