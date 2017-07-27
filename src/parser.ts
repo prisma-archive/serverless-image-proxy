@@ -34,7 +34,7 @@ const namePattern = /^(\w+)(.(png|jpg|jpeg|svg|gif|bmp|webp))?$/
 // /v1/ciwkuhq2s0dbf0131rcb3isiq/cj37jinmt008o0108zwhax711/600x200/20x20/Graphcool.jpg
 export function parseParams(path: string): [(Error | null), (Params | null)] {
   // also trim trailing slash
-  const [,,...parts] = path.replace(/\/$/, '').split('/')
+  const [, , ...parts] = path.replace(/\/$/, '').split('/')
 
   if (parts.length < 2) {
     throw new Error(`Invalid path: ${path}`)
@@ -42,8 +42,8 @@ export function parseParams(path: string): [(Error | null), (Params | null)] {
 
   const projectId = parts[0]
   const fileSecret = parts[1]
-  let resize: (string | undefined) = undefined
-  let crop: (string | undefined) = undefined
+  let resize: string | undefined = undefined
+  let crop: string | undefined = undefined
 
   if (parts.length >= 3) {
     if (parts[2].match(resizePattern)) {
@@ -51,7 +51,10 @@ export function parseParams(path: string): [(Error | null), (Params | null)] {
     } else if (parts[2].match(cropPattern)) {
       crop = parts[2]
     } else if (!parts[2].match(namePattern)) {
-      return [new Error(`Invalid resize, crop pattern or name of image: ${parts[2]}`), null]
+      return [
+        new Error(`Invalid resize, crop pattern or name of image: ${parts[2]}`),
+        null,
+      ]
     }
   }
 
@@ -61,12 +64,15 @@ export function parseParams(path: string): [(Error | null), (Params | null)] {
     } else if (parts[3].match(cropPattern)) {
       crop = parts[3]
     } else if (!parts[3].match(namePattern)) {
-      return [new Error(`Invalid resize, crop pattern or name of image: ${parts[3]}`), null]
+      return [
+        new Error(`Invalid resize, crop pattern or name of image: ${parts[3]}`),
+        null,
+      ]
     }
   }
 
-  if(parts.length >= 5) {
-    if(!parts[4].match(namePattern)) {
+  if (parts.length >= 5) {
+    if (!parts[4].match(namePattern)) {
       return [new Error(`Invalid name of image: ${parts[4]}`), null]
     }
   }
@@ -100,13 +106,15 @@ function extractResize(str: string): Resize {
     throw new Error(`At least width or height must be provided`)
   }
 
-  if (width && width > 10000 || height && height > 10000) {
-    throw new Error(`Limit exceeded. Width (${width}) or height (${height}) must not be bigger than 10000`)
+  if ((width && width > 10000) || (height && height > 10000)) {
+    throw new Error(
+      `Limit exceeded. Width (${width}) or height (${height}) must not be bigger than 10000`,
+    )
   }
 
   const force = forceStr === '!'
 
-  return {width, height, force}
+  return { width, height, force }
 }
 
 function extractCrop(str: string): Crop {
@@ -119,5 +127,5 @@ function extractCrop(str: string): Crop {
 
   // TODO test for errors
 
-  return {width, height, x, y}
+  return { width, height, x, y }
 }

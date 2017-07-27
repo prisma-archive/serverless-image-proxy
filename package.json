@@ -1,12 +1,22 @@
 {
   "scripts": {
     "test": "tsc && ava .build/src/*.test.js",
-    "prepare": "docker-compose run --rm serverless npm rebuild"
+    "prepare": "docker-compose run --rm serverless npm rebuild",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "prettier --write --no-semi --single-quote --trailing-comma",
+      "git add"
+    ]
   },
   "devDependencies": {
     "@types/aws-lambda": "^0.0.15",
     "@types/node": "^8.0.16",
     "ava": "^0.21.0",
+    "husky": "^0.14.3",
+    "lint-staged": "^4.0.2",
+    "prettier": "^1.5.3",
     "serverless-plugin-typescript": "^1.0.0"
   },
   "dependencies": {
