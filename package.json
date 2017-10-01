@@ -11,9 +11,9 @@
     ]
   },
   "devDependencies": {
-    "@types/aws-lambda": "^0.0.15",
+    "@types/aws-lambda": "^0.0.16",
     "@types/node": "^8.0.16",
-    "ava": "^0.21.0",
+    "ava": "^0.22.0",
     "husky": "^0.14.3",
     "lint-staged": "^4.0.2",
     "prettier": "^1.5.3",
