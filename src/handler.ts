@@ -118,7 +118,7 @@ export default callbackRuntime(async (event: APIGatewayEvent) => {
     }
   }
 
-  const buf = await stream.toBuffer()
+  const buf = await stream.withMetadata().toBuffer()
 
   return base64Response(
     buf.toString('base64'),
