@@ -103,6 +103,7 @@ export default callbackRuntime(async (event: APIGatewayEvent) => {
     }
 
     if (config.resize) {
+      stream.rotate()
       stream.resize(config.resize.width, config.resize.height)
 
       if (config.resize.force) {
